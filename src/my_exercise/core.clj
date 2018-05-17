@@ -8,7 +8,7 @@
 
 (defroutes app
   (GET "/" [] home/page)
-  (GET "/search" [] search/page)
+  (POST "/search" [street street-2 city state zip] search/page)
   (route/resources "/")
   (route/not-found "Not found"))
 
