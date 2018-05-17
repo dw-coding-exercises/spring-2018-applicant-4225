@@ -116,10 +116,12 @@
      [:label {:for "city-field"} "City:"]
      [:input {:id "city-field"
               :type "text"
-              :name "city"}]
+              :name "city"
+              :value "Newark"}]
      [:label {:for "state-field"} "State:"]
      [:select {:id "state-field"
-               :name "state"}
+               :name "state"
+               :value "NJ"}
       [:option ""]
       (for [state us-state/postal-abbreviations]
         [:option {:value state} state])]
