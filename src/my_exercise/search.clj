@@ -19,13 +19,15 @@
 
 ;; Get election data based on user inputs. 
 (defn election-data [request]
-  (client/get 
+	(def request-body (client/get 
   	(str/replace 
   		(str/lower-case 
   			(str "https://api.turbovote.org/elections/"
   				"upcoming?district-divisions=ocd-division/country:us/state:" (get (get request :params) :state) 
   				",ocd-division/country:us/state:" (get (get request :params) :state)
   				"/place:" (get (get request :params) :city)))#" " "_")))
+	(request-body :body)	
+	)
 
 ;; Copied from home.clj file. Can be used for HTML formatting to display results of HTTP GET request.
 (defn display [request]
@@ -33,7 +35,6 @@
    [:h1 "Getting started" ]
    [:h2]
    [:p (get (get request :params) :street)]
-   [:p (ring-curl/to-curl "api.turbovote.org/elections/upcoming")]
    [:p "Thank you for applying to work at Democracy Works! "
     "This coding exercise is designed to show off your ability to program web applications in Clojure. "
     "You should spend no more than 2 hours on it and then turn it in to us "
@@ -64,6 +65,6 @@
 
 (defn page [request]
   (html5
-   (election-data request)
    (header request)
+   (election-data request)
    (display request)))
