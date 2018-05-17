@@ -1,6 +1,10 @@
 (ns my-exercise.search
   (:require [hiccup.page :refer [html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
+            [ring.util.codec :as codec]
+            [ring.middleware.params :as params]
+            [ring-curl.core :as ring-curl]
+            [clj-http.client :as client]
             [my-exercise.us-state :as us-state]))
 
 (defn header [_]
@@ -11,9 +15,16 @@
    [:title "Find my next election"]
    [:link {:rel "stylesheet" :href "default.css"}]])
 
-(defn display [_]
+(defn handler [request]
+  (client/get "https://api.turbovote.org/elections/upcoming?district-divisions=ocd-division/country:us/state:nj,ocd-division/country:us/state:nj/place:newark"))
+
+(defn display [request]
+
   [:div {:class "display"}
-   [:h1 "Getting started"]
+   [:h1 "Getting started" ]
+   [:h2]
+   [:p (get (get request :params) :street)]
+   [:p (ring-curl/to-curl "api.turbovote.org/elections/upcoming")]
    [:p "Thank you for applying to work at Democracy Works! "
     "This coding exercise is designed to show off your ability to program web applications in Clojure. "
     "You should spend no more than 2 hours on it and then turn it in to us "
@@ -44,5 +55,6 @@
 
 (defn page [request]
   (html5
+   (handler request)
    (header request)
    (display request)))
