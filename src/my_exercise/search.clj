@@ -5,8 +5,10 @@
             [ring.middleware.params :as params]
             [ring-curl.core :as ring-curl]
             [clj-http.client :as client]
+            [clojure.string :as str]
             [my-exercise.us-state :as us-state]))
 
+;; Header copied from home.clj file. 
 (defn header [_]
   [:head
    [:meta {:charset "UTF-8"}]
@@ -15,11 +17,18 @@
    [:title "Find my next election"]
    [:link {:rel "stylesheet" :href "default.css"}]])
 
-(defn handler [request]
-  (client/get (clojure.string/lower-case (str "https://api.turbovote.org/elections/upcoming?district-divisions=ocd-division/country:us/state:" (get (get request :params) :state) ",ocd-division/country:us/state:" (get (get request :params) :state)"/place:" (get (get request :params) :city)))))
+;; Get election data based on user inputs. 
+(defn election-data [request]
+  (client/get 
+  	(str/replace 
+  		(str/lower-case 
+  			(str "https://api.turbovote.org/elections/"
+  				"upcoming?district-divisions=ocd-division/country:us/state:" (get (get request :params) :state) 
+  				",ocd-division/country:us/state:" (get (get request :params) :state)
+  				"/place:" (get (get request :params) :city)))#" " "_")))
 
+;; Copied from home.clj file. Can be used for HTML formatting to display results of HTTP GET request.
 (defn display [request]
-
   [:div {:class "display"}
    [:h1 "Getting started" ]
    [:h2]
@@ -55,6 +64,6 @@
 
 (defn page [request]
   (html5
-   (handler request)
+   (election-data request)
    (header request)
    (display request)))
