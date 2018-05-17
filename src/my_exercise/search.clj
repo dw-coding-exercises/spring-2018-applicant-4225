@@ -16,7 +16,7 @@
    [:link {:rel "stylesheet" :href "default.css"}]])
 
 (defn handler [request]
-  (client/get "https://api.turbovote.org/elections/upcoming?district-divisions=ocd-division/country:us/state:nj,ocd-division/country:us/state:nj/place:newark"))
+  (client/get (clojure.string/lower-case (str "https://api.turbovote.org/elections/upcoming?district-divisions=ocd-division/country:us/state:" (get (get request :params) :state) ",ocd-division/country:us/state:" (get (get request :params) :state)"/place:" (get (get request :params) :city)))))
 
 (defn display [request]
 
